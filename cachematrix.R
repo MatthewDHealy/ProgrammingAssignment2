@@ -1,7 +1,7 @@
 ## Put comments here that give an overall description of what your
 ## functions do
 
-## Adding a comment to verify that I can edit this code
+## Editing this comment just to create a second commit
 
 ## Write a short comment describing this function
 
