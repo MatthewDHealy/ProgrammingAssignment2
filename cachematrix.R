@@ -2,12 +2,12 @@
 
 ## Two functions here.  First function uses a list of functions to
 ## create a simple class for an object that contains a matrix, its
-## inverse, and getter/setter methods.  To get the inverse from an
-## object created using the first function, we must first call a
-## setInverse method that calls solve
+## inverse, and getter/setter methods.  However this object DOES NOT
+## KNOW how to compute is own inverse.  The inverse needs to be set
+## with a call to its setInverse member function.
 
 ## The second function is a wrapper function that automatically
-## calls the setInverse method as needed.  It uses LEXICAL scoping
+## does solve() and setInverse as needed.  It uses LEXICAL scoping
 ## rules to cache the matrix and its inverse, so that it will only
 ## call the setInverse method once unless the matrix has changed
 ## between calls
@@ -52,6 +52,18 @@ makeCacheMatrix <- function(x = matrix()) {
 ## the matrix inversion results
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
+	## first we see whether this matrix object already
+	## knows its own inverse from a previous call
+	inv <- x$getInverse()
+	if (!is.null(inv)) {
+           message("we find the cached inverse")
+	   return(inv)
+	}
+	## If we get here then we need to compute and cache inverse
+	data <- x$get()
+	inv <- solve(data, ...)
+	x$setInverse(inv)
+	return(inv)
 }
 
 
