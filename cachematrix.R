@@ -1,17 +1,58 @@
-## Put comments here that give an overall description of what your
-## functions do
 
-## Editing this comment just to create a second commit
 
-## Write a short comment describing this function
+## Two functions here.  First function uses a list of functions to
+## create a simple class for an object that contains a matrix, its
+## inverse, and getter/setter methods.  To get the inverse from an
+## object created using the first function, we must first call a
+## setInverse method that calls solve
 
+## The second function is a wrapper function that automatically
+## calls the setInverse method as needed.  It uses LEXICAL scoping
+## rules to cache the matrix and its inverse, so that it will only
+## call the setInverse method once unless the matrix has changed
+## between calls
+
+## As an experienced user of Perl, I find the <<- way of using lexical
+## scoping annoying compared to the "my" keyword by which I cache stuff
+## in Perl.  But this is an R programming class so I'll get off my
+## soapbox now; linear models in Perl are a royal pain which is why
+## I need to learn R now...
+
+## first function basically just makes some closures to create and
+## update our matrix object
 makeCacheMatrix <- function(x = matrix()) {
-
+    inv <- NULL
+    # intialize with NULL for inverse, which will need to be computed
+    # using solve() when it is needed.
+    set <- function(y) {
+        x <<- y
+        # double-left arrow means that when we set new data for our
+        # matrix object, we also null-out its inverse from the surrounding
+        # scope
+        # In Perl, I would do this with outer curlies to define a scope
+        # and put the "my" statements declaring x and inv in the outer
+        # scope while the "my" for y would be here.  Looks like R lacks
+        # an equivalent of "use strict" or maybe Prof. Peng hasn't told
+        # us about that yet?
+        inv <<- NULL
+    }
+    get <- function() x
+    setInverse <- function(solve) inv <<- solve
+    # setter for inv member calls solve and uses double-left
+    # arrow so it will update a copy of inv in the surrounding scope
+    getInverse <- function() inv
+    list(set = set, get = get,
+	 setInverse = setInverse,
+	 getInverse = getInverse
+	 )
 }
 
 
-## Write a short comment describing this function
-
+## now here is the wrapper that uses LEXICAL scoping rules to cache
+## the matrix inversion results
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
 }
+
+
+
